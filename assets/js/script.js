@@ -4,6 +4,7 @@ var tasksToDoEl = document.querySelector('#tasks-to-do');
 var  pageContentEl = document.querySelector("#page-content");
 var taskInProgressEl = document.querySelector("#tasks-in-progress");
 var taskCompletedEl = document.querySelector("#tasks-completed");
+var tasks = [];
 var taskFormHandler = function(event) {
     event.preventDefault();
     // debugger;
@@ -25,7 +26,8 @@ var taskFormHandler = function(event) {
     else {
         var taskDataObj = {
             name: taskNameInput,
-            type: taskTypeInput
+            type: taskTypeInput,
+            status: "to do"
     };
     createTaskEl(taskDataObj);
     }
@@ -41,6 +43,14 @@ var completeEditTask = function (taskName, taskType, taskId) {
     // set new values
     taskSelected.querySelector("h3.task-name").textContent = taskName;
     taskSelected.querySelector("span.task-type").textContent = taskType;
+
+    // loop throught tasks array and task object with new content
+    for (var i = 0; i < tasks.length; i++) {
+        if (taska[i].id === parseInt(taskId)){
+            tasks[i].name = taskName;
+            tasks[i].type = taskType;
+        }
+    };
     alert("Task Updated");
     formEl.removeAttribute("data-task-id");
     document.querySelector("#save-task").textContent = "Add Task";
@@ -61,6 +71,10 @@ var createTaskEl = function(taskDataObj) {
     listItemEl.appendChild(taskActionsEl);
     tasksToDoEl.appendChild(listItemEl);
     listItemEl.appendChild(taskInfoEl);
+    console.log(taskDataObj);
+    console.log(taskDataObj.status);
+    taskDataObj.id = taskIdCounter
+    tasks.push(taskDataObj);
     taskIdCounter++;
 }
 var createTaskActions = function(taskId) {
@@ -150,6 +164,13 @@ var taskStatusChangeHandler = function(event) {
     }
     else if (statusValue === "completed") {
         taskCompletedEl.appendChild(taskSelected);
+    }
+    // update task's in tasks array
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === parseInt(taskId)) {
+            tasks[i].status = statusValue;
+        }
+        
     }
 };
 formEl.addEventListener("submit", taskFormHandler);
